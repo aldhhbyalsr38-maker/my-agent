@@ -6,7 +6,7 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
 from google import genai
 
-# --- 1. خادم ويب مصغر لإبقاء الخدمة مجانية وشغالة على Render ---
+# --- 1. خادم ويب مصغر لإبقاء الخدمة مجانية على Render ---
 web_app = Flask(__name__)
 
 @web_app.route('/')
@@ -33,7 +33,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_text = update.message.text
     try:
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model='gemini-1.5-flash',
             contents=user_text,
             config={'system_instruction': SYSTEM_INSTRUCTION}
         )
@@ -42,7 +42,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(f"حدث خطأ أثناء المعالجة: {e}")
 
 if __name__ == '__main__':
-    # تشغيل خادم الويب في المسار الخفي
+    # تشغيل خادم الويب
     server_thread = Thread(target=run_web_server)
     server_thread.daemon = True
     server_thread.start()
